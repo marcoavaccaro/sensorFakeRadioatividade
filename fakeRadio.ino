@@ -8,14 +8,14 @@
 int ledState = LOW;
 unsigned long previousMillis = 0; 
 int interval = 1000;
-int scanTime = 3; //In seconds
+int scanTime = 0; //In seconds
 int auxCount = 0;
 bool foundBeacon = false;
 BLEScan* pBLEScan;
 
 class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
     void onResult(BLEAdvertisedDevice advertisedDevice) {
-      //Serial.printf(advertisedDevice.toString().c_str());
+      Serial.println(advertisedDevice.toString().c_str());
     }
 };
 
@@ -50,7 +50,6 @@ void setup() {
 void Blink( void * parameter) {
   for(;;) {
   unsigned long currentMillis = millis();
-
     if (currentMillis - previousMillis >= interval) {
       if (foundBeacon == true){
     // save the last time you blinked the LED
@@ -73,12 +72,26 @@ void loop() {
      
   Serial.println("*realizando nova leitura*");
   
-  std::stringstream ss; //nessa posição para zerar a cada loop
-  int rssi;
-  BLEScanResults foundDevices = pBLEScan->start(scanTime, false);
-  int count = foundDevices.getCount();
+  //std::stringstream ss; //nessa posição para zerar a cada loop
+  BLEScanResults foundDevices = pBLEScan->start(scanTime, true);
+  Serial.println("teste");
+  //int count = foundDevices.getCount();
   //Serial.print("Beacons Encontrados: ");
   //Serial.println(count);
+  BLEAdvertisedDevice d = foundDevices.getDevice(1);
+  int rssi = d.getRSSI();
+  Serial.print("RSSI: ");
+  Serial.println(rssi);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /*
   auxCount = 0;
   for (int i = 0; i < count; i++)
   {  
@@ -96,6 +109,7 @@ void loop() {
      auxCount++;
     } 
   }
+*/
 
   if (auxCount == 0){
     foundBeacon = false;
